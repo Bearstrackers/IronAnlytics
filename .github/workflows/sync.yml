@@ -1,20 +1,60 @@
-name: Sync & Deploy
+name: Sync from Google Sheets & Deploy
+
 on:
   schedule:
     - cron: '0 */6 * * *'  # Every 6 hours
-  workflow_dispatch:       # Manual trigger
+  workflow_dispatch:       # Manual trigger button
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  deploy:
+  sync-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Update data from Google Sheets
-        run: |
-          curl -L "https://docs.google.com/spreadsheets/d/${{ secrets.2PACX-1vT-ubntZvT0qxMP9Av32E2l8W5tie4omEt8GCA-uR0cpPAq71Sa27HQX2wwaEnXOPVxltjrkj80myZB }}/gviz/tq?tqx=out:json" -o data.json
-      - name: Commit and push
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add .
-          git diff --quiet && git diff --staged --quiet || git commit -m "Sync from Google Sheets"
-          git push
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Fetch data from Google Sheets
+      run: |
+        # Fetch CSV from published sheet
+        curl -L "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ubntZvT0qxMP9Av32E2l8W5tie4omEt8GCA-uR0cpPAq71Sa27HQX2wwaEnXOPVxltjrkj80myZB/pub?output=csv" -o sheet_data.csv || true
+
+        # If CSV fetch succeeds, you can process it here
+        # For now, we just commit it so the dashboard can use it
+        ls -la sheet_data.csv || echo "CSV fetch failed, using embedded data"
+
+    - name: Commit updated data
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add -A
+        git diff --quiet && git diff --staged --quiet || git commit -m "Auto-sync from Google Sheets [$(date -u +%Y-%m-%d_%H:%M)]"
+        git push
+      continue-on-error: true
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '.'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
