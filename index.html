@@ -2,389 +2,447 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Iron Analytics — 12-Week Strength Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Iron Log</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg: #0b0d12;
-    --card: #12141c;
-    --card-hover: #181b26;
+    --bg: #0a0c10;
+    --surface: #14161f;
+    --surface-hover: #1a1d28;
     --accent: #00d4aa;
-    --accent-dim: #00d4aa18;
-    --accent-glow: #00d4aa33;
+    --accent-dim: rgba(0,212,170,0.12);
     --text: #e8eaf0;
-    --text-dim: #6b7280;
+    --text-dim: #5a6078;
     --border: #1e2230;
     --danger: #ef4444;
     --warning: #f59e0b;
     --success: #22c55e;
     --purple: #a855f7;
     --blue: #3b82f6;
-    --cyan: #06b6d4;
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* App shell */
+  .app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+  .topbar h1 { font-size: 18px; font-weight: 800; }
+  .topbar .sub { font-size: 11px; color: var(--text-dim); }
+  .mode-toggle {
+    display: flex;
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 3px;
+  }
+  .mode-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mode-btn.active {
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  /* Scrollable content */
+  .content {
+    flex: 1;
+    overflow-y: auto;
     overflow-x: hidden;
+    padding: 12px 16px 80px;
+    -webkit-overflow-scrolling: touch;
   }
-  .bg-mesh {
-    position: fixed; inset:0; z-index:0; pointer-events:none;
-    background:
-      radial-gradient(ellipse 70% 50% at 15% 30%, var(--accent-glow), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 85% 15%, #3b82f622, transparent 50%),
-      radial-gradient(ellipse 40% 50% at 50% 85%, #a855f715, transparent 50%);
-    animation: meshPulse 15s ease-in-out infinite alternate;
-  }
-  @keyframes meshPulse {
-    0% { opacity:0.5; transform:scale(1); }
-    100% { opacity:0.9; transform:scale(1.03); }
-  }
-  .container { position:relative; z-index:1; max-width:1440px; margin:0 auto; padding:20px; }
+  .content::-webkit-scrollbar { width: 0; }
 
-  header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding: 16px 0 28px; border-bottom:1px solid var(--border); margin-bottom:28px;
-    flex-wrap:wrap; gap:16px;
+  /* Day selector pills */
+  .day-pills {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+    scrollbar-width: none;
   }
-  .brand { display:flex; align-items:center; gap:14px; }
-  .brand-icon {
-    width:48px; height:48px; border-radius:14px;
-    background: linear-gradient(135deg, var(--accent), #059669);
-    display:flex; align-items:center; justify-content:center;
-    font-size:24px; box-shadow: 0 4px 24px var(--accent-glow);
-    animation: iconFloat 3s ease-in-out infinite;
+  .day-pills::-webkit-scrollbar { display: none; }
+  .day-pill {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  @keyframes iconFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
-  .brand h1 { font-size:24px; font-weight:800; letter-spacing:-0.5px; }
-  .brand p { font-size:12px; color:var(--text-dim); margin-top:2px; }
-  .sync-badge {
-    display:flex; align-items:center; gap:8px;
-    background: var(--card); border:1px solid var(--border);
-    padding:8px 16px; border-radius:10px; font-size:12px; color:var(--text-dim);
-    cursor:pointer; transition:all 0.3s; user-select:none;
+  .day-pill.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
   }
-  .sync-badge:hover { border-color:var(--accent); color:var(--accent); }
-  .sync-badge.syncing { border-color:var(--warning); color:var(--warning); }
-  .sync-dot { width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 8px var(--success); animation:pulse 2s infinite; }
-  .sync-dot.offline { background:var(--danger); box-shadow:0 0 8px var(--danger); animation:none; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .day-pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .dot.done { background: var(--success); }
+  .dot.todo { background: var(--warning); }
+  .dot.rest { background: var(--text-dim); }
 
-  .kpi-grid {
-    display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap:14px; margin-bottom:28px;
+  /* Week selector */
+  .week-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 8px 0 16px;
   }
-  .kpi-card {
-    background: var(--card); border:1px solid var(--border); border-radius:16px;
-    padding:22px; position:relative; overflow:hidden; transition:all 0.3s;
+  .week-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .kpi-card::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:3px;
-    background: linear-gradient(90deg, var(--accent), var(--purple));
-    opacity:0; transition:opacity 0.3s;
-  }
-  .kpi-card:hover { transform:translateY(-3px); border-color:var(--accent); box-shadow:0 12px 40px rgba(0,212,170,0.06); }
-  .kpi-card:hover::before { opacity:1; }
-  .kpi-label { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-dim); margin-bottom:8px; }
-  .kpi-value { font-size:32px; font-weight:800; }
-  .kpi-delta { margin-top:6px; font-size:12px; display:flex; align-items:center; gap:4px; }
-  .kpi-delta.up { color:var(--success); }
-  .kpi-delta.down { color:var(--danger); }
-  .kpi-delta.neutral { color:var(--text-dim); }
+  .week-btn:active { background: var(--surface-hover); }
+  .week-label { font-size: 14px; font-weight: 700; min-width: 80px; text-align: center; }
 
-  .section { margin-bottom:28px; }
-  .section-header {
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:16px; flex-wrap:wrap; gap:10px;
+  /* Exercise card */
+  .ex-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
   }
-  .section-title { font-size:16px; font-weight:700; display:flex; align-items:center; gap:10px; }
-  .section-title .dot { width:6px; height:6px; border-radius:50%; background:var(--accent); }
-  .section-actions { display:flex; gap:6px; flex-wrap:wrap; }
-  .btn {
-    background:var(--card); border:1px solid var(--border); color:var(--text-dim);
-    padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer; transition:all 0.2s;
+  .ex-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
   }
-  .btn:hover { border-color:var(--accent); color:var(--accent); }
-  .btn.active { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+  .ex-name { font-size: 15px; font-weight: 700; }
+  .ex-meta {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .ex-rm {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+  }
 
-  .chart-grid {
-    display:grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap:14px; margin-bottom:28px;
+  /* Set inputs */
+  .sets-row {
+    display: flex;
+    gap: 8px;
   }
-  .chart-card {
-    background: var(--card); border:1px solid var(--border); border-radius:16px;
-    padding:18px;
+  .set-box {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
   }
-  .chart-card.wide { grid-column: 1 / -1; }
-  .chart-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
-  .chart-title { font-size:13px; font-weight:600; color:var(--text-dim); }
+  .set-box label {
+    display: block;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .set-box input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    padding: 4px 0;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  .set-box input::-webkit-outer-spin-button,
+  .set-box input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .set-box input::placeholder { color: var(--text-dim); opacity: 0.4; }
+  .set-box input:focus {
+    border-bottom: 2px solid var(--accent);
+  }
+  .set-box .unit {
+    font-size: 10px;
+    color: var(--text-dim);
+  }
 
-  .heatmap-grid {
-    display:grid; grid-template-columns: 50px repeat(6, 1fr);
-    gap:3px;
+  /* RPE slider */
+  .rpe-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
   }
-  .heatmap-cell {
-    aspect-ratio:1; border-radius:5px; display:flex; align-items:center; justify-content:center;
-    font-size:10px; font-weight:600; transition:all 0.2s; cursor:pointer;
-    position:relative;
+  .rpe-label { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+  .rpe-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    outline: none;
   }
-  .heatmap-cell:hover { transform:scale(1.12); z-index:2; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
-  .heatmap-label { font-size:10px; color:var(--text-dim); display:flex; align-items:center; justify-content:center; }
-  .heatmap-day { font-size:9px; color:var(--text-dim); text-align:center; padding-bottom:3px; font-weight:600; }
+  .rpe-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--warning);
+    cursor: pointer;
+  }
+  .rpe-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--warning);
+    min-width: 28px;
+    text-align: right;
+  }
 
-  .muscle-list { display:flex; flex-direction:column; gap:8px; }
-  .muscle-row { display:flex; align-items:center; gap:10px; }
-  .muscle-name { width:90px; font-size:11px; color:var(--text-dim); text-align:right; font-weight:500; }
-  .muscle-bar-wrap { flex:1; height:24px; background:var(--bg); border-radius:6px; overflow:hidden; position:relative; }
-  .muscle-bar { height:100%; border-radius:6px; transition:width 1s ease; position:relative; overflow:hidden; }
-  .muscle-bar::after {
-    content:''; position:absolute; inset:0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-    animation:shimmer 2.5s infinite;
+  /* Bottom action bar */
+  .action-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    display: flex;
+    gap: 10px;
+    max-width: 600px;
+    margin: 0 auto;
   }
-  @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
-  .muscle-value { width:36px; font-size:11px; font-weight:700; text-align:right; }
+  .btn-primary {
+    flex: 1;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: #000;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:active { opacity: 0.8; }
+  .btn-secondary {
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
 
-  .lift-grid {
-    display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap:14px;
+  /* DASHBOARD VIEW */
+  .dash-kpi {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
   }
-  .lift-card {
-    background: var(--card); border:1px solid var(--border); border-radius:16px;
-    padding:18px; position:relative; overflow:hidden;
+  .kpi-mini {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
   }
-  .lift-card::after {
-    content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
-    background: linear-gradient(90deg, var(--accent), var(--purple));
-    opacity:0.3;
+  .kpi-mini .val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
   }
-  .lift-name { font-size:13px; font-weight:700; margin-bottom:2px; }
-  .lift-category { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; }
-  .lift-stats { display:flex; gap:12px; }
-  .lift-stat { flex:1; }
-  .lift-stat-label { font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:3px; }
-  .lift-stat-value { font-size:20px; font-weight:700; }
-  .lift-stat-value.best { color:var(--accent); }
-  .mini-chart { height:50px; margin-top:10px; }
+  .kpi-mini .lbl {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 
-  .day-tabs {
-    display:flex; gap:3px; background:var(--bg); padding:4px; border-radius:12px;
-    margin-bottom:16px; overflow-x:auto;
+  .chart-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
   }
-  .day-tab {
-    flex:1; min-width:90px; padding:10px 14px; border-radius:10px;
-    font-size:11px; font-weight:600; color:var(--text-dim);
-    background:transparent; border:none; cursor:pointer; transition:all 0.2s;
-    text-align:center; white-space:nowrap;
+  .chart-box h3 {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
-  .day-tab:hover { color:var(--text); }
-  .day-tab.active { background:var(--card); color:var(--accent); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
-  .day-tab .day-badge {
-    display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:5px;
-  }
-  .day-tab .day-badge.done { background:var(--success); }
-  .day-tab .day-badge.todo { background:var(--warning); }
-  .day-tab .day-badge.rest { background:var(--text-dim); }
 
-  .ex-table { width:100%; border-collapse:collapse; font-size:12px; }
-  .ex-table th {
-    text-align:left; padding:10px 10px; color:var(--text-dim); font-size:10px;
-    text-transform:uppercase; letter-spacing:1px; font-weight:600; border-bottom:1px solid var(--border);
+  /* Heatmap compact */
+  .hm-grid {
+    display: grid;
+    grid-template-columns: 30px repeat(6, 1fr);
+    gap: 2px;
   }
-  .ex-table td { padding:10px; border-bottom:1px solid var(--border); }
-  .ex-table tr:hover td { background:var(--card-hover); }
-  .ex-table tr:last-child td { border-bottom:none; }
-  .ex-name { font-weight:600; font-size:13px; }
-  .ex-target { font-size:10px; color:var(--text-dim); margin-top:2px; }
-  .set-pills { display:flex; gap:3px; flex-wrap:wrap; }
-  .set-pill {
-    background:var(--bg); border:1px solid var(--border); border-radius:5px;
-    padding:3px 7px; font-size:10px; display:flex; align-items:center; gap:3px;
+  .hm-cell {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 600;
   }
-  .set-pill .wt { color:var(--accent); font-weight:700; }
-  .set-pill .rp { color:var(--text-dim); }
-  .set-pill .rp-tag { font-size:8px; background:var(--accent-dim); color:var(--accent); padding:1px 4px; border-radius:3px; }
-  .rm-val { font-weight:700; color:var(--accent); font-size:14px; }
+  .hm-label {
+    font-size: 9px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
+  /* Toast */
   .toast {
-    position:fixed; bottom:20px; right:20px; z-index:100;
-    background:var(--card); border:1px solid var(--accent); border-radius:12px;
-    padding:14px 18px; display:flex; align-items:center; gap:12px;
-    transform:translateY(120px); opacity:0; transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
-    box-shadow:0 8px 32px rgba(0,0,0,0.4); max-width:320px;
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 100;
+    white-space: nowrap;
   }
-  .toast.show { transform:translateY(0); opacity:1; }
-  .toast-icon { font-size:18px; }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
 
-  @media (max-width:768px) {
-    .chart-grid { grid-template-columns:1fr; }
-    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-    .lift-grid { grid-template-columns:1fr; }
-    header { flex-direction:column; gap:12px; align-items:flex-start; }
-    .heatmap-grid { grid-template-columns: 36px repeat(6, 1fr); }
-    .brand h1 { font-size:20px; }
-  }
+  /* Hidden */
+  .hidden { display: none !important; }
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <base target="_blank">
 </head>
 <body>
-<div class="bg-mesh"></div>
+<div class="app">
+  <div class="topbar">
+    <div>
+      <h1>Iron Log</h1>
+      <div class="sub">Phase 1 · Week <span id="headerWeek">1</span></div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode('log')" id="btnLog">Log</button>
+      <button class="mode-btn" onclick="setMode('view')" id="btnView">View</button>
+    </div>
+  </div>
 
-<div class="container">
-  <header>
-    <div class="brand">
-      <div class="brand-icon">💪</div>
-      <div>
-        <h1>Iron Analytics</h1>
-        <p>12-Week Strength Program · Phase <span id="phaseNum">1</span> · Week <span id="weekNum">1</span></p>
+  <div class="content" id="content">
+    <!-- LOG MODE -->
+    <div id="logMode">
+      <div class="day-pills" id="dayPills"></div>
+
+      <div class="week-bar">
+        <button class="week-btn" onclick="changeWeek(-1)">‹</button>
+        <div class="week-label" id="weekLabel">Week 1</div>
+        <button class="week-btn" onclick="changeWeek(1)">›</button>
+      </div>
+
+      <div id="exerciseList"></div>
+    </div>
+
+    <!-- VIEW MODE -->
+    <div id="viewMode" class="hidden">
+      <div class="dash-kpi">
+        <div class="kpi-mini"><div class="val" id="vSessions">1</div><div class="lbl">Sessions</div></div>
+        <div class="kpi-mini"><div class="val" id="vVolume">22</div><div class="lbl">Sets</div></div>
+        <div class="kpi-mini"><div class="val" id="vBest">21</div><div class="lbl">Best 1RM</div></div>
+        <div class="kpi-mini"><div class="val" id="vAdherence">17%</div><div class="lbl">Adherence</div></div>
+        <div class="kpi-mini"><div class="val" id="vRPE">—</div><div class="lbl">Avg RPE</div></div>
+        <div class="kpi-mini"><div class="val" id="vStreak">1</div><div class="lbl">Streak</div></div>
+      </div>
+
+      <div class="chart-box">
+        <h3>Training Heatmap</h3>
+        <div class="hm-grid" id="heatmap"></div>
+      </div>
+
+      <div class="chart-box">
+        <h3>Weekly Volume</h3>
+        <canvas id="volChart" height="140"></canvas>
+      </div>
+
+      <div class="chart-box">
+        <h3>Key Lifts</h3>
+        <canvas id="liftChart" height="140"></canvas>
       </div>
     </div>
-    <div class="sync-badge" id="syncBtn" onclick="syncFromSheets()">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncText">Sync with Google Sheets</span>
-    </div>
-  </header>
-
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-label">Total Sessions</div>
-      <div class="kpi-value" id="kpiSessions">1</div>
-      <div class="kpi-delta up">↑ Starting strong</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Best 1RM (Zercher)</div>
-      <div class="kpi-value" id="kpi1RM">21<span style="font-size:14px;color:var(--text-dim)">kg</span></div>
-      <div class="kpi-delta neutral">Baseline set</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Total Volume</div>
-      <div class="kpi-value" id="kpiVolume">22<span style="font-size:14px;color:var(--text-dim)">sets</span></div>
-      <div class="kpi-delta up">Week 1 complete</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Avg Session RPE</div>
-      <div class="kpi-value" id="kpiRPE">—</div>
-      <div class="kpi-delta neutral">Log RPE to see trend</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Adherence</div>
-      <div class="kpi-value" id="kpiAdherence">16.7<span style="font-size:14px;color:var(--text-dim)">%</span></div>
-      <div class="kpi-delta up">1 of 6 sessions</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Current Streak</div>
-      <div class="kpi-value" id="kpiStreak">1<span style="font-size:14px;color:var(--text-dim)">day</span></div>
-      <div class="kpi-delta up">Keep it going!</div>
-    </div>
   </div>
 
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title"><span class="dot"></span>Training Consistency Heatmap</div>
-      <div class="section-actions">
-        <button class="btn active" onclick="setHeatmapMode('sets')">Sets</button>
-        <button class="btn" onclick="setHeatmapMode('volume')">Volume</button>
-      </div>
-    </div>
-    <div class="chart-card">
-      <div class="heatmap-grid" id="heatmap"></div>
-    </div>
-  </div>
-
-  <div class="chart-grid">
-    <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Weekly Training Volume</div></div>
-      <canvas id="volumeChart" height="200"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Key Lift Progression (kg)</div></div>
-      <canvas id="liftsChart" height="200"></canvas>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title"><span class="dot"></span>Muscle Group Volume</div>
-      <div class="section-actions">
-        <button class="btn active" id="mvW1" onclick="setMuscleWeek(1)">W1</button>
-        <button class="btn" id="mvW2" onclick="setMuscleWeek(2)">W2</button>
-        <button class="btn" id="mvW3" onclick="setMuscleWeek(3)">W3</button>
-        <button class="btn" id="mvW4" onclick="setMuscleWeek(4)">W4</button>
-      </div>
-    </div>
-    <div class="chart-card">
-      <div class="muscle-list" id="muscleList"></div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title"><span class="dot"></span>Lift Performance</div>
-    </div>
-    <div class="lift-grid" id="liftCards"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title"><span class="dot"></span>Session Details</div>
-    </div>
-    <div class="day-tabs" id="dayTabs"></div>
-    <div class="chart-card" id="dayDetail">
-      <table class="ex-table" id="exTable">
-        <thead><tr><th>Exercise</th><th>Category</th><th>Sets Logged</th><th>Est. 1RM</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="chart-card wide" style="margin-top:24px;">
-    <div class="chart-header"><div class="chart-title">Session RPE Trends</div></div>
-    <canvas id="rpeChart" height="110"></canvas>
+  <div class="action-bar" id="actionBar">
+    <button class="btn-primary" onclick="saveSession()">💾 Save Session</button>
+    <button class="btn-secondary" onclick="syncToSheets()">↻ Sync</button>
   </div>
 </div>
 
-<div class="toast" id="toast">
-  <div class="toast-icon">✅</div>
-  <div>
-    <div style="font-weight:700;font-size:13px;">Sync Complete</div>
-    <div style="font-size:11px;color:var(--text-dim);">Dashboard refreshed from Google Sheets</div>
-  </div>
-</div>
+<div class="toast" id="toast">Saved!</div>
 
 <script>
 // ============================================================================
-// CONFIGURATION
+// DATA
 // ============================================================================
-// Your published Google Sheet:
-// https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ubntZvT0qxMP9Av32E2l8W5tie4omEt8GCA-uR0cpPAq71Sa27HQX2wwaEnXOPVxltjrkj80myZB/pub
-//
-// IMPORTANT: The /e/ ID above is for published sheets. For live sync to work
-// from GitHub Pages, you need the ORIGINAL Sheet ID (from the edit URL).
-// Open your sheet in edit mode and copy the ID from:
-// https://docs.google.com/spreadsheets/d/THIS_IS_YOUR_ORIGINAL_ID/edit
-// Then paste it below in originalSheetId.
-// ============================================================================
-const CONFIG = {
-  // Published sheet ID (for reference)
-  publishId: '2PACX-1vT-ubntZvT0qxMP9Av32E2l8W5tie4omEt8GCA-uR0cpPAq71Sa27HQX2wwaEnXOPVxltjrkj80myZB',
-
-  // ORIGINAL Sheet ID (for JSON API sync) — REQUIRED for live sync from GitHub Pages
-  // Leave empty to use embedded data only (no live sync)
-  originalSheetId: '1N1b4QWcxJXLsxNw7ub70Uun1WoJK2LNCg5_oZni8fp4',
-
-  // Google Apps Script URL (optional, for writing data back to sheet)
-  scriptUrl: ''
-};
-
-// ============================================================================
-// WORKOUT DATA (Auto-extracted from your Excel file)
-// This data is embedded so the dashboard works even without internet.
-// ============================================================================
-let data = {
+const PROGRAM = {
   "program": "12-Week Strength Program",
   "current_phase": 1,
   "current_week": 1,
@@ -4255,411 +4313,264 @@ let data = {
   "volume_summary": []
 };
 
-const dayMap = {
-  'Day 1 - Lower A': { short: 'D1 · Lower A', dayNum: 1 },
-  'Day 2 - Upper A': { short: 'D2 · Upper A', dayNum: 2 },
-  'Day 3 - Condition': { short: 'D3 · Conditioning', dayNum: 3 },
-  'Day 4 - Zone 2': { short: 'D4 · Zone 2', dayNum: 4 },
-  'Day 5 - Lower B': { short: 'D5 · Lower B', dayNum: 5 },
-  'Day 6 - Upper B': { short: 'D6 · Upper B', dayNum: 6 }
+// ============================================================================
+// STATE
+// ============================================================================
+let currentWeek = 1;
+let currentDay = 'Day 1 - Lower A';
+let mode = 'log';
+let localData = JSON.parse(localStorage.getItem('ironLogData') || '{}');
+
+const dayNames = {
+  'Day 1 - Lower A': 'Lower A',
+  'Day 2 - Upper A': 'Upper A', 
+  'Day 3 - Condition': 'Condition',
+  'Day 4 - Zone 2': 'Zone 2',
+  'Day 5 - Lower B': 'Lower B',
+  'Day 6 - Upper B': 'Upper B'
 };
 
-let activeDay = 'Day 1 - Lower A';
-let heatmapMode = 'sets';
-let muscleWeek = 1;
+// ============================================================================
+// INIT
+// ============================================================================
+function init() {
+  renderDayPills();
+  renderExercises();
+  renderDashboard();
+}
 
 // ============================================================================
-// GOOGLE SHEETS SYNC (JSONP method — bypasses CORS)
+// MODE SWITCH
 // ============================================================================
-async function syncFromSheets() {
-  const btn = document.getElementById('syncBtn');
-  const dot = document.getElementById('syncDot');
-  const txt = document.getElementById('syncText');
+function setMode(m) {
+  mode = m;
+  document.getElementById('btnLog').classList.toggle('active', m === 'log');
+  document.getElementById('btnView').classList.toggle('active', m === 'view');
+  document.getElementById('logMode').classList.toggle('hidden', m !== 'log');
+  document.getElementById('viewMode').classList.toggle('hidden', m !== 'view');
+  document.getElementById('actionBar').classList.toggle('hidden', m !== 'log');
+  if (m === 'view') renderDashboard();
+}
 
-  // If no original Sheet ID configured, show setup message
-  if(!CONFIG.originalSheetId || CONFIG.originalSheetId.length < 20) {
-    showToast(
-      'Setup Required', 
-      'For live sync, paste your original Sheet ID in CONFIG.originalSheetId. Dashboard works offline with embedded data.',
-      '⚙️'
+// ============================================================================
+// DAY PILLS
+// ============================================================================
+function renderDayPills() {
+  const container = document.getElementById('dayPills');
+  container.innerHTML = Object.keys(dayNames).map(key => {
+    const dayData = PROGRAM.days[key];
+    const hasData = Object.values(dayData.weeks).some(w => 
+      w.exercises.some(e => e.sets && e.sets.length > 0)
     );
-    return;
-  }
-
-  btn.classList.add('syncing');
-  txt.textContent = 'Syncing...';
-
-  try {
-    // Use JSONP (script tag injection) to bypass CORS
-    const url = `https://docs.google.com/spreadsheets/d/${CONFIG.originalSheetId}/gviz/tq?tqx=out:json`;
-    const callbackName = 'gSheetCallback_' + Date.now();
-    const script = document.createElement('script');
-
-    window[callbackName] = function(response) {
-      parseSheetData(response);
-      cleanup();
-      showToast('Sync Complete', 'Dashboard refreshed from Google Sheets', '✅');
-    };
-
-    script.src = `${url}&callback=${callbackName}`;
-    script.onerror = () => {
-      cleanup();
-      showToast('Sync Failed', 'Could not connect to Google Sheets. Using embedded data.', '⚠️');
-    };
-
-    const timeout = setTimeout(() => {
-      cleanup();
-      showToast('Sync Timeout', 'Using embedded data.', '⏱️');
-    }, 10000);
-
-    function cleanup() {
-      clearTimeout(timeout);
-      delete window[callbackName];
-      if(script.parentNode) script.parentNode.removeChild(script);
-      btn.classList.remove('syncing');
-      dot.classList.remove('offline');
-      txt.textContent = 'Synced with Google Sheets';
-    }
-
-    document.head.appendChild(script);
-  } catch(e) {
-    console.error('Sync error:', e);
-    btn.classList.remove('syncing');
-    dot.classList.add('offline');
-    txt.textContent = 'Offline — using embedded data';
-    showToast('Sync Error', e.message, '❌');
-  }
+    const dotClass = hasData ? 'done' : (key.includes('Zone') ? 'rest' : 'todo');
+    const active = key === currentDay ? 'active' : '';
+    return `<div class="day-pill ${active}" onclick="selectDay('${key}')">
+      <span class="dot ${dotClass}"></span>${dayNames[key]}
+    </div>`;
+  }).join('');
 }
 
-function parseSheetData(response) {
-  if(!response || !response.table) {
-    console.warn('Invalid response from Google Sheets');
-    return;
-  }
-
-  const rows = response.table.rows;
-  console.log('Parsed', rows.length, 'rows from Google Sheets');
-
-  // TODO: Map Google Sheets columns to data structure
-  // This is where you would update data.dashboard, data.days, etc.
-  // based on your specific sheet structure.
-
-  // For now, just re-render with current data
-  init();
+function selectDay(key) {
+  currentDay = key;
+  renderDayPills();
+  renderExercises();
 }
 
 // ============================================================================
-// RENDER FUNCTIONS
+// WEEK NAV
 // ============================================================================
-function renderHeatmap() {
-  const grid = document.getElementById('heatmap');
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat'];
+function changeWeek(delta) {
+  currentWeek = Math.max(1, Math.min(12, currentWeek + delta));
+  document.getElementById('weekLabel').textContent = 'Week ' + currentWeek;
+  document.getElementById('headerWeek').textContent = currentWeek;
+  renderExercises();
+}
 
-  grid.innerHTML = '<div class="heatmap-label"></div>';
-  days.forEach(d => grid.innerHTML += `<div class="heatmap-day">${d}</div>`);
+// ============================================================================
+// EXERCISE INPUTS
+// ============================================================================
+function renderExercises() {
+  const container = document.getElementById('exerciseList');
+  const dayData = PROGRAM.days[currentDay];
+  const weekData = dayData.weeks[currentWeek] || dayData.weeks['1'] || {exercises: []};
 
-  data.dashboard.weekly_volume.forEach(wv => {
-    grid.innerHTML += `<div class="heatmap-label">W${wv.week}</div>`;
-    for(let d=1; d<=6; d++) {
-      const val = wv[`d${d}`];
-      const intensity = val > 0 ? Math.min(val / 25, 1) : 0;
-      const color = val > 0 
-        ? `rgba(0, 212, 170, ${0.08 + intensity * 0.75})` 
-        : 'rgba(30, 34, 48, 0.6)';
-      const textColor = intensity > 0.4 ? '#0b0d12' : 'var(--text-dim)';
-      grid.innerHTML += `
-        <div class="heatmap-cell" style="background:${color}; color:${textColor}" 
-             title="Week ${wv.week}, Day ${d}: ${val} sets">
-          ${val > 0 ? val : ''}
+  container.innerHTML = weekData.exercises.map((ex, idx) => {
+    const saved = localData[`${currentDay}_W${currentWeek}_${ex.name}`] || {};
+
+    let setsHtml = '';
+    const numSets = ex.target ? parseInt(ex.target.split('x')[0]) || 3 : 3;
+
+    for (let s = 0; s < numSets; s++) {
+      const sw = saved[`s${s}_w`] || '';
+      const sr = saved[`s${s}_r`] || '';
+      setsHtml += `
+        <div class="set-box">
+          <label>Set ${s+1}</label>
+          <input type="number" inputmode="decimal" placeholder="0" 
+            value="${sw}" id="w_${idx}_${s}" onchange="markDirty()">
+          <div class="unit">kg</div>
+          <input type="number" inputmode="numeric" placeholder="0" 
+            value="${sr}" id="r_${idx}_${s}" onchange="markDirty()" 
+            style="font-size:14px;font-weight:600;color:var(--text-dim);margin-top:4px;">
+          <div class="unit">reps</div>
         </div>`;
     }
-  });
-}
 
-function setHeatmapMode(mode) {
-  heatmapMode = mode;
-  document.querySelectorAll('.section-actions .btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  renderHeatmap();
-}
+    const rpeVal = saved.rpe || 7;
 
-function renderVolumeChart() {
-  const ctx = document.getElementById('volumeChart').getContext('2d');
-  const weeks = data.dashboard.weekly_volume.map(w => `W${w.week}`);
-  const d1 = data.dashboard.weekly_volume.map(w => w.d1);
-  const d2 = data.dashboard.weekly_volume.map(w => w.d2);
-  const d3 = data.dashboard.weekly_volume.map(w => w.d3);
-  const d5 = data.dashboard.weekly_volume.map(w => w.d5);
-  const d6 = data.dashboard.weekly_volume.map(w => w.d6);
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: weeks,
-      datasets: [
-        {label:'Lower A', data:d1, backgroundColor:'#00d4aa', borderRadius:4, barPercentage:0.7},
-        {label:'Upper A', data:d2, backgroundColor:'#3b82f6', borderRadius:4, barPercentage:0.7},
-        {label:'Condition', data:d3, backgroundColor:'#f59e0b', borderRadius:4, barPercentage:0.7},
-        {label:'Lower B', data:d5, backgroundColor:'#a855f7', borderRadius:4, barPercentage:0.7},
-        {label:'Upper B', data:d6, backgroundColor:'#ef4444', borderRadius:4, barPercentage:0.7}
-      ]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins: { 
-        legend: {display:true, labels:{color:'#6b7280', font:{size:10}, boxWidth:8, padding:12}, position:'bottom'}
-      },
-      scales: {
-        x: { stacked:true, grid:{display:false}, ticks:{color:'#6b7280', font:{size:9}} },
-        y: { stacked:true, grid:{color:'#1e2230'}, ticks:{color:'#6b7280', font:{size:9}} }
-      }
-    }
-  });
-}
-
-function renderLiftsChart() {
-  const ctx = document.getElementById('liftsChart').getContext('2d');
-  const weeks = data.dashboard.key_lifts.map(w => `W${w.week}`);
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: weeks,
-      datasets: [
-        {label:'Zercher Squat', data:data.dashboard.key_lifts.map(w=>w.zercher_squat||null), 
-         borderColor:'#00d4aa', backgroundColor:'#00d4aa15', tension:0.4, fill:true, pointRadius:3, pointHoverRadius:6, borderWidth:2},
-        {label:'RDL', data:data.dashboard.key_lifts.map(w=>w.rdl||null), 
-         borderColor:'#3b82f6', backgroundColor:'#3b82f615', tension:0.4, fill:true, pointRadius:3, pointHoverRadius:6, borderWidth:2},
-        {label:'Incline DB', data:data.dashboard.key_lifts.map(w=>w.incline_db_press||null), 
-         borderColor:'#a855f7', backgroundColor:'#a855f715', tension:0.4, fill:true, pointRadius:3, pointHoverRadius:6, borderWidth:2},
-        {label:'Trap Bar DL', data:data.dashboard.key_lifts.map(w=>w.trap_bar_deadlift||null), 
-         borderColor:'#f59e0b', backgroundColor:'#f59e0b15', tension:0.4, fill:true, pointRadius:3, pointHoverRadius:6, borderWidth:2},
-        {label:'Flat DB Press', data:data.dashboard.key_lifts.map(w=>w.flat_db_press||null), 
-         borderColor:'#ef4444', backgroundColor:'#ef444415', tension:0.4, fill:true, pointRadius:3, pointHoverRadius:6, borderWidth:2}
-      ]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins: { 
-        legend: {display:true, labels:{color:'#6b7280', font:{size:10}, boxWidth:8, padding:10}, position:'bottom'}
-      },
-      scales: {
-        x: { grid:{display:false}, ticks:{color:'#6b7280', font:{size:9}} },
-        y: { grid:{color:'#1e2230'}, ticks:{color:'#6b7280', font:{size:9}} }
-      },
-      spanGaps: true,
-      interaction: { mode: 'index', intersect: false }
-    }
-  });
-}
-
-function renderMuscleVolume() {
-  const list = document.getElementById('muscleList');
-  const weekKey = `week_${muscleWeek}`;
-  const volumes = data.volume_summary.map(m => ({ name: m.name, value: m[weekKey] || 0 }));
-  const maxVol = Math.max(...volumes.map(m => m.value), 1);
-
-  const colors = {
-    'Quad':'#00d4aa', 'Hinge':'#3b82f6', 'Hamstring':'#a855f7', 'Glutes':'#ef4444',
-    'Calves':'#f59e0b', 'Chest':'#22c55e', 'Horizontal Pull':'#60a5fa',
-    'Vertical Pull':'#818cf8', 'Shoulder':'#fb7185', 'Side Delt':'#c084fc',
-    'Rear Delt':'#f472b6', 'Biceps':'#34d399', 'Triceps':'#fbbf24',
-    'Core':'#06b6d4', 'Conditioning':'#94a3b8', 'Loaded Carry':'#d97706',
-    'Shoulder Health':'#a78bfa'
-  };
-
-  list.innerHTML = volumes.filter(m => m.value > 0).map(m => {
-    const pct = (m.value / maxVol * 100);
     return `
-      <div class="muscle-row">
-        <div class="muscle-name">${m.name}</div>
-        <div class="muscle-bar-wrap">
-          <div class="muscle-bar" style="width:${pct}%; background:${colors[m.name]||'#00d4aa'}"></div>
+      <div class="ex-card">
+        <div class="ex-header">
+          <div>
+            <div class="ex-name">${ex.name}</div>
+            <div class="ex-meta">${ex.target} · ${ex.category}</div>
+          </div>
+          <div class="ex-rm">${ex.rm ? ex.rm + 'kg' : ''}</div>
         </div>
-        <div class="muscle-value">${m.value}</div>
+        <div class="sets-row">${setsHtml}</div>
+        <div class="rpe-row">
+          <span class="rpe-label">RPE</span>
+          <input type="range" min="4" max="10" step="0.5" value="${rpeVal}" 
+            class="rpe-slider" id="rpe_${idx}" oninput="updateRPEDisplay(${idx})" onchange="markDirty()">
+          <span class="rpe-value" id="rpev_${idx}">${rpeVal}</span>
+        </div>
       </div>`;
-  }).join('') || '<div style="color:var(--text-dim);text-align:center;padding:20px;">No data for this week yet</div>';
+  }).join('');
 }
 
-function setMuscleWeek(wk) {
-  muscleWeek = wk;
-  document.querySelectorAll('.section-actions .btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(`mvW${wk}`).classList.add('active');
-  renderMuscleVolume();
+function updateRPEDisplay(idx) {
+  const val = document.getElementById(`rpe_${idx}`).value;
+  document.getElementById(`rpev_${idx}`).textContent = val;
 }
 
-function renderLiftCards() {
-  const grid = document.getElementById('liftCards');
-  const liftStats = [];
+let isDirty = false;
+function markDirty() { isDirty = true; }
 
-  Object.entries(data.days).forEach(([dayName, dayData]) => {
-    Object.entries(dayData.weeks).forEach(([week, weekData]) => {
-      weekData.exercises.forEach(ex => {
-        if(ex.sets && ex.sets.length > 0) {
-          const maxWt = Math.max(...ex.sets.map(s => s.weight || 0));
-          const existing = liftStats.find(l => l.name === ex.name);
-          if(existing) {
-            if(maxWt > existing.best) existing.best = maxWt;
-            existing.trend[parseInt(week)-1] = maxWt;
-          } else {
-            liftStats.push({
-              name: ex.name,
-              category: ex.category,
-              best: maxWt,
-              current: maxWt,
-              trend: Array(12).fill(0).map((_,i) => i === parseInt(week)-1 ? maxWt : 0)
-            });
-          }
-        }
-      });
+// ============================================================================
+// SAVE
+// ============================================================================
+function saveSession() {
+  const dayData = PROGRAM.days[currentDay];
+  const weekData = dayData.weeks[currentWeek] || dayData.weeks['1'] || {exercises: []};
+
+  weekData.exercises.forEach((ex, idx) => {
+    const key = `${currentDay}_W${currentWeek}_${ex.name}`;
+    const saved = localData[key] || {};
+    const numSets = ex.target ? parseInt(ex.target.split('x')[0]) || 3 : 3;
+
+    for (let s = 0; s < numSets; s++) {
+      const w = document.getElementById(`w_${idx}_${s}`)?.value;
+      const r = document.getElementById(`r_${idx}_${s}`)?.value;
+      if (w !== undefined) saved[`s${s}_w`] = w;
+      if (r !== undefined) saved[`s${s}_r`] = r;
+    }
+    saved.rpe = document.getElementById(`rpe_${idx}`)?.value || 7;
+    localData[key] = saved;
+  });
+
+  localStorage.setItem('ironLogData', JSON.stringify(localData));
+  isDirty = false;
+  showToast('💾 Session saved locally');
+}
+
+// ============================================================================
+// SYNC TO GOOGLE SHEETS
+// ============================================================================
+function syncToSheets() {
+  // Build CSV data from localStorage
+  let csv = 'Week,Day,Exercise,Set,Weight,Reps,RPE\n';
+  Object.entries(localData).forEach(([key, data]) => {
+    const parts = key.split('_');
+    const day = parts[0];
+    const week = parts[1];
+    const ex = parts.slice(2).join('_');
+    Object.entries(data).forEach(([k, v]) => {
+      if (k.startsWith('s')) {
+        const setNum = k.split('_')[0];
+        const type = k.split('_')[1];
+        // Simplified — you'd build proper rows here
+      }
     });
   });
 
-  grid.innerHTML = liftStats.map(lift => {
-    const canvasId = `spark-${lift.name.replace(/[^a-zA-Z0-9]/g,'-')}`;
-    return `
-      <div class="lift-card">
-        <div class="lift-name">${lift.name}</div>
-        <div class="lift-category">${lift.category}</div>
-        <div class="lift-stats">
-          <div class="lift-stat">
-            <div class="lift-stat-label">Best</div>
-            <div class="lift-stat-value best">${lift.best}${lift.best?'kg':''}</div>
-          </div>
-          <div class="lift-stat">
-            <div class="lift-stat-label">Current</div>
-            <div class="lift-stat-value">${lift.current}${lift.current?'kg':''}</div>
-          </div>
-        </div>
-        <div class="mini-chart"><canvas id="${canvasId}" height="50"></canvas></div>
-      </div>`;
-  }).join('');
-
-  setTimeout(() => {
-    liftStats.forEach(lift => {
-      const canvasId = `spark-${lift.name.replace(/[^a-zA-Z0-9]/g,'-')}`;
-      const canvas = document.getElementById(canvasId);
-      if(!canvas) return;
-      const ctx = canvas.getContext('2d');
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: lift.trend.map((_,i)=>`W${i+1}`),
-          datasets: [{
-            data: lift.trend.map(v=>v||null),
-            borderColor: '#00d4aa', borderWidth: 2, tension: 0.4,
-            pointRadius: 0, fill: false, spanGaps: true
-          }]
-        },
-        options: {
-          responsive:true, maintainAspectRatio:false,
-          plugins: { legend:{display:false}, tooltip:{enabled:false} },
-          scales: { x:{display:false}, y:{display:false} },
-          layout: { padding: 2 }
-        }
-      });
-    });
-  }, 50);
-}
-
-function renderDayTabs() {
-  const tabs = document.getElementById('dayTabs');
-  tabs.innerHTML = Object.entries(data.days).map(([key, dayData]) => {
-    const dm = dayMap[key];
-    const hasData = Object.values(dayData.weeks).some(w => w.exercises.some(e => e.sets && e.sets.length > 0));
-    const statusClass = hasData ? 'done' : (key.includes('Zone') ? 'rest' : 'todo');
-    const active = key === activeDay ? 'active' : '';
-    return `<button class="day-tab ${active}" onclick="switchDay('${key}')">
-      <span class="day-badge ${statusClass}"></span>${dm.short}
-    </button>`;
-  }).join('');
-}
-
-function switchDay(dayKey) {
-  activeDay = dayKey;
-  renderDayTabs();
-  renderDayDetail();
-}
-
-function renderDayDetail() {
-  const tbody = document.querySelector('#exTable tbody');
-  const dayData = data.days[activeDay];
-  const currentWeekData = dayData.weeks[data.current_week] || dayData.weeks['1'] || {exercises: []};
-
-  tbody.innerHTML = currentWeekData.exercises.map(ex => {
-    const setsHtml = ex.sets && ex.sets.length > 0 
-      ? `<div class="set-pills">${ex.sets.map((s,i) => {
-          const wt = s.weight !== null && s.weight !== undefined ? `${s.weight}kg` : (s.weight === 0 ? 'BW' : '—');
-          const rp = s.reps !== null && s.reps !== undefined ? `${s.reps}` : '';
-          const rpe = s.rpe !== null && s.rpe !== undefined ? `RPE ${s.rpe}` : '';
-          return `<div class="set-pill"><span class="wt">S${i+1}</span><span class="rp">${wt}</span>${rp?`<span class="rp-tag">${rp} reps</span>`:''}${rpe?`<span class="rp-tag">${rpe}</span>`:''}</div>`;
-        }).join('')}</div>`
-      : '<span style="color:var(--text-dim);font-size:11px;">Not yet logged</span>';
-
-    return `<tr>
-      <td><div class="ex-name">${ex.name}</div><div class="ex-target">${ex.target || ''}</div></td>
-      <td><span style="font-size:10px;color:var(--text-dim);background:var(--bg);padding:3px 8px;border-radius:6px;">${ex.category || ''}</span></td>
-      <td>${setsHtml}</td>
-      <td class="rm-val">${ex.rm || '—'}</td>
-    </tr>`;
-  }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--text-dim);padding:30px;">No exercises for this session</td></tr>';
-}
-
-function renderRPEChart() {
-  const ctx = document.getElementById('rpeChart').getContext('2d');
-  const rpeByWeek = Array(12).fill(null);
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: Array(12).fill(0).map((_,i) => `W${i+1}`),
-      datasets: [{
-        label: 'Avg Session RPE',
-        data: rpeByWeek,
-        borderColor: '#f59e0b',
-        backgroundColor: '#f59e0b15',
-        tension: 0.4,
-        fill: true,
-        pointRadius: 4,
-        pointBackgroundColor: '#f59e0b',
-        spanGaps: false,
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { display: false }, ticks: { color: '#6b7280', font: { size: 9 } } },
-        y: { min: 4, max: 10, grid: { color: '#1e2230' }, ticks: { color: '#6b7280', font: { size: 9 }, stepSize: 1 } }
-      }
-    }
+  // For now, copy data to clipboard so user can paste into sheet
+  navigator.clipboard.writeText(JSON.stringify(localData, null, 2)).then(() => {
+    showToast('📋 Data copied! Paste into your sheet');
+  }).catch(() => {
+    showToast('⚠️ Could not copy. Data is saved locally.');
   });
 }
 
-function showToast(title, msg, icon) {
-  const toast = document.getElementById('toast');
-  toast.querySelector('.toast-icon').textContent = icon;
-  toast.querySelector('div div:first-child').textContent = title;
-  toast.querySelector('div div:last-child').textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 4000);
+// ============================================================================
+// DASHBOARD
+// ============================================================================
+function renderDashboard() {
+  // KPIs
+  document.getElementById('vSessions').textContent = PROGRAM.dashboard.total_sessions;
+  document.getElementById('vVolume').textContent = PROGRAM.dashboard.total_volume;
+  document.getElementById('vBest').textContent = PROGRAM.dashboard.best_1rm;
+  document.getElementById('vAdherence').textContent = '17%';
+  document.getElementById('vRPE').textContent = PROGRAM.dashboard.avg_rpe || '—';
+  document.getElementById('vStreak').textContent = '1';
+
+  // Heatmap
+  const hm = document.getElementById('heatmap');
+  hm.innerHTML = '<div class="hm-label"></div>';
+  ['M','T','W','T','F','S'].forEach(d => hm.innerHTML += `<div class="hm-label">${d}</div>`);
+  PROGRAM.dashboard.weekly_volume.forEach(wv => {
+    hm.innerHTML += `<div class="hm-label">W${wv.week}</div>`;
+    for (let d = 1; d <= 6; d++) {
+      const val = wv[`d${d}`];
+      const intensity = val > 0 ? Math.min(val / 25, 1) : 0;
+      const color = val > 0 ? `rgba(0,212,170,${0.15 + intensity * 0.7})` : 'rgba(30,34,48,0.5)';
+      const tc = intensity > 0.4 ? '#0a0c10' : 'var(--text-dim)';
+      hm.innerHTML += `<div class="hm-cell" style="background:${color};color:${tc}">${val || ''}</div>`;
+    }
+  });
+
+  // Volume chart
+  const volCtx = document.getElementById('volChart');
+  if (volCtx) {
+    const weeks = PROGRAM.dashboard.weekly_volume.map(w => `W${w.week}`);
+    const totals = PROGRAM.dashboard.weekly_volume.map(w => w.total);
+    new Chart(volCtx, {
+      type: 'bar',
+      data: { labels: weeks, datasets: [{ data: totals, backgroundColor: '#00d4aa', borderRadius: 4, barPercentage: 0.6 }] },
+      options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#5a6078', font: { size: 9 } } }, y: { grid: { color: '#1e2230' }, ticks: { color: '#5a6078', font: { size: 9 } } } } }
+    });
+  }
+
+  // Lift chart
+  const liftCtx = document.getElementById('liftChart');
+  if (liftCtx) {
+    const weeks = PROGRAM.dashboard.key_lifts.map(w => `W${w.week}`);
+    new Chart(liftCtx, {
+      type: 'line',
+      data: {
+        labels: weeks,
+        datasets: [
+          { label: 'Zercher', data: PROGRAM.dashboard.key_lifts.map(w => w.zercher_squat || null), borderColor: '#00d4aa', tension: 0.3, pointRadius: 3, spanGaps: true },
+          { label: 'RDL', data: PROGRAM.dashboard.key_lifts.map(w => w.rdl || null), borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, spanGaps: true }
+        ]
+      },
+      options: { responsive: true, plugins: { legend: { labels: { color: '#5a6078', font: { size: 10 }, boxWidth: 8 } } }, scales: { x: { grid: { display: false }, ticks: { color: '#5a6078', font: { size: 9 } } }, y: { grid: { color: '#1e2230' }, ticks: { color: '#5a6078', font: { size: 9 } } } } }
+    });
+  }
 }
 
-function init() {
-  document.getElementById('phaseNum').textContent = data.current_phase;
-  document.getElementById('weekNum').textContent = data.current_week;
-  renderHeatmap();
-  renderVolumeChart();
-  renderLiftsChart();
-  renderMuscleVolume();
-  renderLiftCards();
-  renderDayTabs();
-  renderDayDetail();
-  renderRPEChart();
+// ============================================================================
+// TOAST
+// ============================================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// ============================================================================
+// START
+// ============================================================================
 init();
 </script>
 </body>
