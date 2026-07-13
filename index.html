@@ -229,6 +229,7 @@
   }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<base target="_blank">
 </head>
 <body>
 <div class="bg-mesh"></div>
@@ -355,17 +356,34 @@
 </div>
 
 <script>
-// ============================================
-// CONFIG — Replace with your Google Sheet ID
-// ============================================
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+// Your published Google Sheet:
+// https://docs.google.com/spreadsheets/d/e/2PACX-1vT-ubntZvT0qxMP9Av32E2l8W5tie4omEt8GCA-uR0cpPAq71Sa27HQX2wwaEnXOPVxltjrkj80myZB/pub
+//
+// IMPORTANT: The /e/ ID above is for published sheets. For live sync to work
+// from GitHub Pages, you need the ORIGINAL Sheet ID (from the edit URL).
+// Open your sheet in edit mode and copy the ID from:
+// https://docs.google.com/spreadsheets/d/THIS_IS_YOUR_ORIGINAL_ID/edit
+// Then paste it below in originalSheetId.
+// ============================================================================
 const CONFIG = {
-  sheetId: '2PACX-1vT-ubntZvT0qxMP9Av32E2l8W5tie4omEt8GCA-uR0cpPAq71Sa27HQX2wwaEnXOPVxltjrkj80myZB',
-  scriptUrl: 'YOUR_APPS_SCRIPT_URL_HERE'
+  // Published sheet ID (for reference)
+  publishId: '2PACX-1vT-ubntZvT0qxMP9Av32E2l8W5tie4omEt8GCA-uR0cpPAq71Sa27HQX2wwaEnXOPVxltjrkj80myZB',
+
+  // ORIGINAL Sheet ID (for JSON API sync) — REQUIRED for live sync from GitHub Pages
+  // Leave empty to use embedded data only (no live sync)
+  originalSheetId: '1N1b4QWcxJXLsxNw7ub70Uun1WoJK2LNCg5_oZni8fp4',
+
+  // Google Apps Script URL (optional, for writing data back to sheet)
+  scriptUrl: ''
 };
 
-// ============================================
-// DATA (Embedded from Excel extraction)
-// ============================================
+// ============================================================================
+// WORKOUT DATA (Auto-extracted from your Excel file)
+// This data is embedded so the dashboard works even without internet.
+// ============================================================================
 let data = {
   "program": "12-Week Strength Program",
   "current_phase": 1,
@@ -373,27 +391,3736 @@ let data = {
   "days": {
     "Day 1 - Lower A": {
       "exercises": [],
-      "weeks": {}
+      "weeks": {
+        "1": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [
+                {
+                  "set": 1,
+                  "weight": 12.5,
+                  "reps": 12,
+                  "rpe": null
+                },
+                {
+                  "set": 2,
+                  "weight": 12.5,
+                  "reps": 12,
+                  "rpe": null
+                },
+                {
+                  "set": 3,
+                  "weight": 15.0,
+                  "reps": 12,
+                  "rpe": null
+                },
+                {
+                  "set": 4,
+                  "weight": 15.0,
+                  "reps": 12,
+                  "rpe": null
+                }
+              ],
+              "rm": 21.0
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [
+                {
+                  "set": 1,
+                  "weight": 12.5,
+                  "reps": 8,
+                  "rpe": null
+                },
+                {
+                  "set": 2,
+                  "weight": 12.5,
+                  "reps": 8,
+                  "rpe": null
+                },
+                {
+                  "set": 3,
+                  "weight": 15.0,
+                  "reps": 8,
+                  "rpe": null
+                },
+                {
+                  "set": 4,
+                  "weight": 15.0,
+                  "reps": 8,
+                  "rpe": null
+                }
+              ],
+              "rm": 19.0
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [
+                {
+                  "set": 1,
+                  "weight": 110.0,
+                  "reps": 8,
+                  "rpe": null
+                },
+                {
+                  "set": 2,
+                  "weight": 110.0,
+                  "reps": 8,
+                  "rpe": null
+                },
+                {
+                  "set": 3,
+                  "weight": 110.0,
+                  "reps": 8,
+                  "rpe": null
+                },
+                {
+                  "set": 4,
+                  "weight": 110.0,
+                  "reps": 6,
+                  "rpe": null
+                }
+              ],
+              "rm": 139.3
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [
+                {
+                  "set": 1,
+                  "weight": 50.0,
+                  "reps": 8,
+                  "rpe": null
+                },
+                {
+                  "set": 2,
+                  "weight": 50.0,
+                  "reps": 8,
+                  "rpe": null
+                },
+                {
+                  "set": 3,
+                  "weight": 50.0,
+                  "reps": 8,
+                  "rpe": null
+                },
+                {
+                  "set": 4,
+                  "weight": 55.0,
+                  "reps": 8,
+                  "rpe": null
+                }
+              ],
+              "rm": 69.7
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [
+                {
+                  "set": 1,
+                  "weight": 50.0,
+                  "reps": 12,
+                  "rpe": null
+                },
+                {
+                  "set": 2,
+                  "weight": 55.0,
+                  "reps": 12,
+                  "rpe": null
+                },
+                {
+                  "set": 3,
+                  "weight": 60.0,
+                  "reps": 12,
+                  "rpe": null
+                },
+                {
+                  "set": 4,
+                  "weight": 60.0,
+                  "reps": 12,
+                  "rpe": null
+                }
+              ],
+              "rm": 84.0
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [
+                {
+                  "set": 1,
+                  "weight": 24.0,
+                  "reps": null,
+                  "rpe": null
+                }
+              ],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [
+                {
+                  "set": 1,
+                  "weight": 3.0,
+                  "reps": null,
+                  "rpe": null
+                }
+              ],
+              "rm": null
+            }
+          ]
+        },
+        "2": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "3": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "4": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "5": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "6": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "7": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "8": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "9": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "10": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "11": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "12": {
+          "exercises": [
+            {
+              "name": "Zercher Squat",
+              "category": "Quad",
+              "target": "4x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "category": "Hinge",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Press (feet low/med)",
+              "category": "Quad",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Leg Curl (Lying/Seated)",
+              "category": "Hamstring",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Standing Calf Raise",
+              "category": "Calves",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "3x8/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Front Plank",
+              "category": "Core",
+              "target": "3x30-45s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        }
+      }
     },
     "Day 2 - Upper A": {
       "exercises": [],
-      "weeks": {}
+      "weeks": {
+        "1": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "2": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "3": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "4": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "5": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "6": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "7": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "8": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "9": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "10": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "11": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "12": {
+          "exercises": [
+            {
+              "name": "Chest-Supported Row",
+              "category": "Horizontal Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Incline DB Press",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lat Pulldown (Neutral)",
+              "category": "Vertical Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Shoulder Press",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated Cable Row",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation",
+              "category": "Shoulder Health",
+              "target": "2x12/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl (Optional)",
+              "category": "Biceps",
+              "target": "2x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown (Optional)",
+              "category": "Triceps",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        }
+      }
     },
     "Day 3 - Condition": {
       "exercises": [],
-      "weeks": {}
+      "weeks": {
+        "1": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "2": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "3": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "4": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "5": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "6": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "7": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "8": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "9": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "10": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "11": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "12": {
+          "exercises": [
+            {
+              "name": "Rowing Machine",
+              "category": "Conditioning",
+              "target": "See protocol",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hanging Knee Raise",
+              "category": "Core",
+              "target": "3x8-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Ab Roller",
+              "category": "Core",
+              "target": "3x6-8",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Side Plank",
+              "category": "Core",
+              "target": "2x30s/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Hangs",
+              "category": "Core",
+              "target": "2x30s",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        }
+      }
     },
     "Day 4 - Zone 2": {
       "exercises": [],
-      "weeks": {}
+      "weeks": {
+        "1": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "2": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "3": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "4": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "5": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "6": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "7": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "8": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "9": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "10": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "11": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "12": {
+          "exercises": [
+            {
+              "name": "Treadmill Incline Walk",
+              "category": "Conditioning",
+              "target": "30-45 min",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        }
+      }
     },
     "Day 5 - Lower B": {
       "exercises": [],
-      "weeks": {}
+      "weeks": {
+        "1": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "2": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "3": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "4": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "5": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "6": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "7": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "8": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "9": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "10": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "11": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "12": {
+          "exercises": [
+            {
+              "name": "Trap Bar Deadlift",
+              "category": "Hinge",
+              "target": "4x5-6",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Hip Thrust",
+              "category": "Glutes",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Landmine Reverse Lunge",
+              "category": "Quad",
+              "target": "3x8/leg",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "One-Arm DB Row",
+              "category": "Horizontal Pull",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Farmer's Carry",
+              "category": "Loaded Carry",
+              "target": "4x30-40m",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Single-Leg Calf Raise",
+              "category": "Calves",
+              "target": "3x10/side",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Back Extension",
+              "category": "Hinge",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Dead Bug",
+              "category": "Core",
+              "target": "2x8/side",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        }
+      }
     },
     "Day 6 - Upper B": {
       "exercises": [],
-      "weeks": {}
+      "weeks": {
+        "1": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "2": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "3": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "4": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "5": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "6": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "7": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "8": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "9": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "10": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "11": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        },
+        "12": {
+          "exercises": [
+            {
+              "name": "Lat Pulldown (Wide/Neutral)",
+              "category": "Vertical Pull",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Flat DB Press / Machine",
+              "category": "Chest",
+              "target": "4x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Chest-Supported Row (Alt)",
+              "category": "Horizontal Pull",
+              "target": "3x10-12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Seated DB Press / Arnold",
+              "category": "Shoulder",
+              "target": "3x8-10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Lateral Raise (Cable/DB)",
+              "category": "Side Delt",
+              "target": "3x12-15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Face Pulls",
+              "category": "Rear Delt",
+              "target": "3x15",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "EZ Curl",
+              "category": "Biceps",
+              "target": "3x10",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "Rope Pushdown / OH Ext",
+              "category": "Triceps",
+              "target": "3x12",
+              "sets": [],
+              "rm": null
+            },
+            {
+              "name": "External Rotation (Opt)",
+              "category": "Shoulder Health",
+              "target": "2x12",
+              "sets": [],
+              "rm": null
+            }
+          ]
+        }
+      }
     }
   },
   "dashboard": {
@@ -541,16 +4268,21 @@ let activeDay = 'Day 1 - Lower A';
 let heatmapMode = 'sets';
 let muscleWeek = 1;
 
-// ============================================
-// GOOGLE SHEETS SYNC
-// ============================================
+// ============================================================================
+// GOOGLE SHEETS SYNC (JSONP method — bypasses CORS)
+// ============================================================================
 async function syncFromSheets() {
   const btn = document.getElementById('syncBtn');
   const dot = document.getElementById('syncDot');
   const txt = document.getElementById('syncText');
 
-  if(CONFIG.sheetId.includes('YOUR_')) {
-    showToast('Setup Required', 'Paste your Google Sheet ID in CONFIG at the top of this file', '⚙️');
+  // If no original Sheet ID configured, show setup message
+  if(!CONFIG.originalSheetId || CONFIG.originalSheetId.length < 20) {
+    showToast(
+      'Setup Required', 
+      'For live sync, paste your original Sheet ID in CONFIG.originalSheetId. Dashboard works offline with embedded data.',
+      '⚙️'
+    );
     return;
   }
 
@@ -558,7 +4290,8 @@ async function syncFromSheets() {
   txt.textContent = 'Syncing...';
 
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${CONFIG.sheetId}/gviz/tq?tqx=out:json`;
+    // Use JSONP (script tag injection) to bypass CORS
+    const url = `https://docs.google.com/spreadsheets/d/${CONFIG.originalSheetId}/gviz/tq?tqx=out:json`;
     const callbackName = 'gSheetCallback_' + Date.now();
     const script = document.createElement('script');
 
@@ -571,13 +4304,13 @@ async function syncFromSheets() {
     script.src = `${url}&callback=${callbackName}`;
     script.onerror = () => {
       cleanup();
-      showToast('Sync Failed', 'Using cached data. Check Sheet ID.', '⚠️');
+      showToast('Sync Failed', 'Could not connect to Google Sheets. Using embedded data.', '⚠️');
     };
 
     const timeout = setTimeout(() => {
       cleanup();
-      showToast('Sync Timeout', 'Using cached data.', '⏱️');
-    }, 8000);
+      showToast('Sync Timeout', 'Using embedded data.', '⏱️');
+    }, 10000);
 
     function cleanup() {
       clearTimeout(timeout);
@@ -593,38 +4326,31 @@ async function syncFromSheets() {
     console.error('Sync error:', e);
     btn.classList.remove('syncing');
     dot.classList.add('offline');
-    txt.textContent = 'Offline — using local data';
+    txt.textContent = 'Offline — using embedded data';
     showToast('Sync Error', e.message, '❌');
   }
 }
 
 function parseSheetData(response) {
-  if(!response || !response.table) return;
-  console.log('Parsed', response.table.rows.length, 'rows from sheet');
+  if(!response || !response.table) {
+    console.warn('Invalid response from Google Sheets');
+    return;
+  }
+
+  const rows = response.table.rows;
+  console.log('Parsed', rows.length, 'rows from Google Sheets');
+
+  // TODO: Map Google Sheets columns to data structure
+  // This is where you would update data.dashboard, data.days, etc.
+  // based on your specific sheet structure.
+
+  // For now, just re-render with current data
   init();
 }
 
-async function writeToSheet(exerciseData) {
-  if(!CONFIG.scriptUrl || CONFIG.scriptUrl.includes('YOUR_')) {
-    showToast('Not Configured', 'Set your Apps Script URL to enable write-back', '⚙️');
-    return;
-  }
-  try {
-    const res = await fetch(CONFIG.scriptUrl, {
-      method: 'POST',
-      body: JSON.stringify(exerciseData),
-      headers: {'Content-Type': 'application/json'}
-    });
-    const result = await res.json();
-    if(result.success) showToast('Saved', 'Workout logged to Google Sheets', '💾');
-  } catch(e) {
-    showToast('Save Failed', e.message, '❌');
-  }
-}
-
-// ============================================
+// ============================================================================
 // RENDER FUNCTIONS
-// ============================================
+// ============================================================================
 function renderHeatmap() {
   const grid = document.getElementById('heatmap');
   const days = ['Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -918,7 +4644,7 @@ function showToast(title, msg, icon) {
   toast.querySelector('div div:first-child').textContent = title;
   toast.querySelector('div div:last-child').textContent = msg;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3500);
+  setTimeout(() => toast.classList.remove('show'), 4000);
 }
 
 function init() {
